@@ -1,0 +1,15 @@
+FT.CREATE idx:cdr
+ON hash PREFIX 1 "cdr:"
+SCHEMA a_party TAG SORTABLE
+b_party TAG SORTABLE
+trace_filter TAG SORTABLE
+start_time NUMERIC SORTABLE
+duration NUMERIC SORTABLE
+status TAG SORTABLE
+
+
+FT.CREATE idx:trace
+ON hash PREFIX 1 "trace:"
+SCHEMA status TAG SORTABLE
+jitter_ms NUMERIC SORTABLE
+latency_ms NUMERIC SORTABLE

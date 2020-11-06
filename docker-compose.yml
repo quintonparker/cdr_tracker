@@ -1,0 +1,73 @@
+version: "3.7"
+
+services:
+    cdr_generator:
+        build: .
+        image: cdr_insights:latest
+        command: ['python', '-u', 'cdr_generator.py', 'events:cdr']
+        restart: unless-stopped
+        volumes:
+            - ./:/app
+        environment:
+            REDIS_URL: redis://redismod:6379/
+        depends_on:
+            - redismod
+    trace_generator:
+        build: .
+        image: cdr_insights:latest
+        command: ['python', '-u', 'trace_generator.py', 'events:trace']
+        restart: unless-stopped
+        volumes:
+            - ./:/app
+        environment:
+            REDIS_URL: redis://redismod:6379/
+        depends_on:
+            - redismod
+    cdr_hash_worker:
+        build: .
+        image: cdr_insights:latest
+        command: ['python', '-u', 'cdr_hash_worker.py', 'consumer1']
+        restart: unless-stopped
+        volumes:
+            - ./:/app
+        environment:
+            REDIS_URL: redis://redismod:6379/
+        depends_on:
+            - redismod
+    cdr_stats_worker:
+        build: .
+        image: cdr_insights:latest
+        command: ['python', '-u', 'cdr_stats_worker.py', 'consumer1']
+        restart: unless-stopped
+        volumes:
+            - ./:/app
+        environment:
+            REDIS_URL: redis://redismod:6379/
+        depends_on:
+            - redismod
+    trace_hash_worker:
+        build: .
+        image: cdr_insights:latest
+        command: ['python', '-u', 'trace_hash_worker.py', 'consumer1']
+        restart: unless-stopped
+        volumes:
+            - ./:/app
+        environment:
+            REDIS_URL: redis://redismod:6379/
+        depends_on:
+            - redismod
+    trace_stats_worker:
+        build: .
+        image: cdr_insights:latest
+        command: ['python', '-u', 'trace_stats_worker.py', 'consumer1']
+        restart: unless-stopped
+        volumes:
+            - ./:/app
+        environment:
+            REDIS_URL: redis://redismod:6379/
+        depends_on:
+            - redismod
+    redismod:
+        image: redislabs/redismod:latest
+        ports:
+            - 6379:6379
